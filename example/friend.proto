@@ -1,0 +1,31 @@
+syntax = "proto3"; //声明了protobuf的版本
+
+package fixbug;//声明了代码所在的包 (对于C++来说是namespace)
+
+// 定义下面的选项 表示生成service服务类和rpc方法描述 默认不生成
+option cc_generic_services = true;
+message ResultCode
+{
+    int32 errcode = 1;
+    bytes errmsg = 2;
+}
+
+message GetFriendsListRequest
+{
+    uint32 userid = 1;
+}
+
+message GetFriendsListResponse
+{
+    ResultCode result = 1;
+    repeated bytes friends = 2;
+}
+
+// 在protobuf里面定义描述rpc方法的类型 -service
+// protobuf不支持rpc 只是对rpc方法的描述
+// 无论是message 还是service 在生成C++代码后都是i要给class类
+// 只写下面的service 在生成C++代码后默认不会生成类的  需要在问价最前面加上选项
+service FriendServiceRpc
+{
+    rpc GetFriendsList(GetFriendsListRequest) returns(GetFriendsListResponse);
+}
